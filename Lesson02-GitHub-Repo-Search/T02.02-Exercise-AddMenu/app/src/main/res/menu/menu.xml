@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- If there isn't room to show the menu entry as a button, it would end up in the overflow
+        menu -->
     <item
         android:orderInCategory="1"
         app:showAsAction="ifRoom"

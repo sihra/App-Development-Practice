@@ -15,10 +15,14 @@
  */
 package com.example.android.datafrominternet;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,9 +43,34 @@ public class MainActivity extends AppCompatActivity {
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
     }
 
-    // TODO (8) Override onCreateOptionsMenu
-    // TODO (9) Within onCreateOptionsMenu, use getMenuInflater().inflate to inflate the menu
-    // TODO (10) Return true to display your menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        // Inflating the menu
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true; // This will allow menu to be displayed
+    }
+
+    /**
+     * Toast - provides a simple feedback about an operation in a small popup
+     * Nothing changes, it automatically disappears after a certain amount of time
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedMenuItem = item.getItemId();
+        // Checking is the menu button was clicked
+        if(selectedMenuItem == R.id.action_search){
+            // If the menu item's ID is the same, a Toast is shown
+            Context context = MainActivity.this;
+            String message = "Search clicked";
+            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+            // Return true to let Android know that you've handled the situation/ menu click
+            return true;
+        }
+        else{
+            // If the selected menu option wasn't the menu button, Android will handle it
+            return super.onOptionsItemSelected(item);
+        }
+    }
 
     // TODO (11) Override onOptionsItemSelected
     // TODO (12) Within onOptionsItemSelected, get the ID of the item that was selected
