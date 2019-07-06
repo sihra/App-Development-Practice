@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,8 +56,17 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        // TODO (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
-        // TODO (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+        
+        // Create a string to store the results when URL is clicked?
+        String githubSearchResults = null;
+        try{
+            // Using the URL that was given to the user, parsed and turned into a Java URL by NetworkUtils, we use getResponseFromHttpUrl to return result from online
+            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
+            // Displays the Github repo from what the user selected
+            mSearchResultsTextView.setText(githubSearchResults);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @Override

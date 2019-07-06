@@ -15,9 +15,12 @@
  */
 package com.example.android.datafrominternet.utilities;
 
+import android.net.Uri;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
@@ -45,8 +48,27 @@ public class NetworkUtils {
      * @return The URL to use to query the GitHub server.
      */
     public static URL buildUrl(String githubSearchQuery) {
-        // TODO (1) Fill in this method to build the proper GitHub query URL
-        return null;
+        // URI is a a string of characters used to identify a resource on a computer network, of which the best known type is the web address or URL.
+        // We parse the link of the Github repo and create a URI based off it
+        Uri.Builder builtUri = Uri.parse(GITHUB_BASE_URL).buildUpon();
+
+        // appendQueryParameter(String key, String value) is used to take in parameters for our search query and sort fields
+        builtUri.appendQueryParameter(PARAM_QUERY, githubSearchQuery);
+        builtUri.appendQueryParameter(PARAM_SORT, sortBy);
+
+        // This actually creates the Android URI
+        builtUri.build();
+
+        // The method returns a Java URL so must convert URI to URL
+        URL javaURL = null;
+        try{
+            javaURL = new URL(builtUri.toString());
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+
+        // Retuning the converted URI to Java URL
+        return javaURL;
     }
 
     /**
