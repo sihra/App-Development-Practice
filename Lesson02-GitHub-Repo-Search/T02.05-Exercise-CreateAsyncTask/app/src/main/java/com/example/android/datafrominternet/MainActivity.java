@@ -15,6 +15,7 @@
  */
 package com.example.android.datafrominternet;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -56,19 +57,43 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        String githubSearchResults = null;
-        try {
-            githubSearchResults = NetworkUtils.getResponseFromHttpUrl(githubSearchUrl);
-            mSearchResultsTextView.setText(githubSearchResults);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // TODO (4) Create a new GithubQueryTask and call its execute method, passing in the url to query
+
+        // Starting a new GithubQueryTask and executing it when editText is changed
+        new GithubQueryTask().execute(githubSearchUrl);
     }
 
-    // TODO (1) Create a class called GithubQueryTask that extends AsyncTask<URL, Void, String>
-    // TODO (2) Override the doInBackground method to perform the query. Return the results. (Hint: You've already written the code to perform the query)
-    // TODO (3) Override onPostExecute to display the results in the TextView
+    /**
+     * Class GithubQueryTask will be used as an AsyncTask class object
+     * This represents an asynchronous task to be executed in a secondary thread
+     */
+    public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+
+        @Override // AsyncTask class requires this method to be overwritten in every class object
+        /**
+         * Method that will perform the query and return the results
+         * This method utilizes the method in NetworkUtils for capturing information about the user-given URL through the internet
+         */
+        protected String doInBackground(URL ... urls) {
+            // The URL given
+            URL searchUrl = urls[0];
+            String githubSearchResults = null;
+            try{
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+            // The secondary thread is in charge of returning info from the internet to show results
+            return githubSearchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            // If the given string is not null or empty
+            if(s != null && !s.equals("")){
+                mSearchResultsTextView.setText(s);
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -79,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemThatWasClickedId = item.getItemId();
+
+        // When the search button is pressed, a secondary thread is created
         if (itemThatWasClickedId == R.id.action_search) {
             makeGithubSearchQuery();
             return true;

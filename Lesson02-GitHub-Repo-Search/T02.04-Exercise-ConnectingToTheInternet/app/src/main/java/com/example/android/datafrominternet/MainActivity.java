@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        
+
         // Create a string to store the results when URL is clicked?
         String githubSearchResults = null;
         try{
